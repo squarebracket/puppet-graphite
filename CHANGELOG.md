@@ -1,3 +1,28 @@
+## 2015-05-22 - 5.11.0 (Feature/Bugfix release)
+
+#### Features:
+
+- Issue #175 Adding gunicorn_bind option to gunicorn
+
+#### Bugfixes:
+
+- Fixed #174 RedHat: delay checking the process has started to aviod race-conition failures on start
+- Fixed #165 Debian: fix first carbon instance name in init scripts
+
+## 2015-04-21 - 5.10.3 (Bugfix release)
+
+#### Bugfixes
+
+- Fixed #170 Faster directory permission handling
+- Fixed #164 RedHat/Debian: Fix init script error for Redhat and fix some bash style
+- Fixed #169 Use gr_web_user / gr_web_group variables in gunicorn template
+
+## 2015-03-09 - 5.10.2 (Bugfix release)
+
+#### Bugfixes:
+
+- Fixed #162 sort hashes to avoid pseudo changes in relay-rules.conf
+
 ## 2015-02-26 - 5.10.1 (Bugfix release)
 
 #### Bugfixes:
