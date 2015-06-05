@@ -1,4 +1,41 @@
-## 2015-05-22 - 5.11.0 (Feature/Bugfix release)
+## 2015-06-05 - 5.13.0 (Feature/Bugfix release)
+
+#### Features:
+
+- Issue #186 Add parameter `gr_apache_noproxy`  to establish exception for mod_clustering for the graphites virtual host
+- Issue #189 Add parameter `gr_apache_conf_prefix` to set apache conf file prefix for graphite
+- Issue #191 Add parameter `gr_carbonlink_hosts_timeout`, `gr_carbonlink_query_bulk`
+- Issue #191 Add parameter `gr_rendering_hosts`, `gr_rendering_hosts_timeout`, `gr_prefetch_cache`
+
+#### Bugfixes:
+
+- Fixed #185 RedHat add small sleep at restart of carbon
+- Fixed #194 logrotate script also looks for relay and aggregator logs now
+- Fixed #196 Debian correctly remove apache 2.2 000-default
+
+## 2015-05-20 - 5.12.0 (Feature release)
+
+#### Features:
+
+- Issue #181 Add parameter `gr_enable_carbon_cache` (defaults to true)
+- Issue #182 Add parameter `gr_disable_webapp_cache` to disable django cache for use with Grafana
+- Issue #183 Add parameter `gr_log_listener_connections`
+
+## 2015-04-24 - 5.11.2 (Bugfix release)
+
+#### Bugfixes:
+
+- Fixed #178 fix POSIX test syntax on init script
+
+## 2015-04-22 - 5.11.1 (Bugfix release)
+
+#### Bugfixes:
+
+- Fixed #177 ensure graphite.db permissions are same as web user
+- Fixed #177 puppet 2.7 does not support unless
+- Fixed #177 pip symlink hack uses correct graphite version
+
+## 2015-04-22 - 5.11.0 (Feature/Bugfix release)
 
 #### Features:
 

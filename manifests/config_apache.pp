@@ -39,7 +39,7 @@ class graphite::config_apache inherits graphite::params {
       exec { 'Disable default apache site':
         command => 'a2dissite 000-default',
         notify  => Service[$::graphite::params::apache_service_name],
-        onlyif  => 'test -f /etc/apache2/sites-enabled/000-default.conf',
+        onlyif  => 'test -f /etc/apache2/sites-enabled/000-default -o -f /etc/apache2/sites-enabled/000-default.conf',
         require => Package[$::graphite::params::apache_wsgi_pkg],
       }
     }
@@ -92,10 +92,10 @@ class graphite::config_apache inherits graphite::params {
 
   case $::osfamily {
     'Debian': {
-      file { '/etc/apache2/sites-enabled/graphite.conf':
+      file { "/etc/apache2/sites-enabled/${::graphite::gr_apache_conf_prefix}graphite.conf":
         ensure  => link,
         notify  => Service[$::graphite::params::apache_service_name],
-        require => File['/etc/apache2/sites-available/graphite.conf'],
+        require => File["${::graphite::params::apacheconf_dir}/graphite.conf"],
         target  => "${::graphite::params::apacheconf_dir}/graphite.conf",
       }
     }
