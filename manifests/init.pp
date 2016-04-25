@@ -186,6 +186,15 @@
 #   Default is '0.0.0.0'
 # [*gr_relay_line_port*]
 #   Default is 2013.
+# [*gr_relay_enable_udp_listener*]
+#   Set this to True to enable the UDP listener.
+#   Default is False.
+# [*gr_relay_udp_receiver_interface*]
+#   Its clear, isnt it?
+#   Default is 0.0.0.0
+# [*gr_relay_udp_receiver_port*]
+#   Self explaining.
+#   Default is 2013
 # [*gr_relay_pickle_interface*]
 #   Default is '0.0.0.0'
 # [*gr_relay_pickle_port*]
@@ -586,6 +595,9 @@ class graphite (
   $gr_enable_carbon_relay                 = false,
   $gr_relay_line_interface                = '0.0.0.0',
   $gr_relay_line_port                     = 2013,
+  $gr_relay_enable_udp_listener           = 'False',
+  $gr_relay_udp_receiver_interface        = '0.0.0.0',
+  $gr_relay_udp_receiver_port             = 2013,
   $gr_relay_pickle_interface              = '0.0.0.0',
   $gr_relay_pickle_port                   = 2014,
   $gr_relay_log_listener_connections      = 'True',
@@ -659,20 +671,19 @@ class graphite (
   ,
   $gr_use_remote_user_auth                = 'False',
   $gr_remote_user_header_name             = undef,
-  $gr_base_dir                            = $::graphite::params::base_dir,
-  $gr_storage_dir                         = $::graphite::params::storage_dir,
-  $gr_local_data_dir                      = $::graphite::params::local_data_dir,
-  $gr_rrd_dir                             = $::graphite::params::rrd_dir,
-  $gr_whitelists_dir                      = $::graphite::params::whitelists_dir,
-  $gr_carbon_conf_dir                     = $::graphite::params::carbon_conf_dir,
-  $gr_carbon_log_dir                      = $::graphite::params::carbon_log_dir,
-  $gr_graphiteweb_log_dir                 = $::graphite::params::graphiteweb_log_dir,
-  $gr_graphiteweb_conf_dir                = $::graphite::params::graphiteweb_conf_dir,
-  $gr_graphiteweb_webapp_dir              = $::graphite::params::graphiteweb_webapp_dir,
-  $gr_graphiteweb_storage_dir             = $::graphite::params::graphiteweb_storage_dir,
-  $gr_graphiteweb_install_lib_dir         = $::graphite::params::graphiteweb_install_lib_dir,
-  $gr_pid_dir                             = '/var/run',
-  $gr_apache_logdir                       = '/var/log/httpd/graphite-web',
+  $gr_base_dir                            = '/opt/graphite',
+  $gr_storage_dir                         = undef,
+  $gr_local_data_dir                      = undef,
+  $gr_rrd_dir                             = undef,
+  $gr_whitelists_dir                      = undef,
+  $gr_carbon_conf_dir                     = undef,
+  $gr_carbon_log_dir                      = undef,
+  $gr_graphiteweb_log_dir                 = undef,
+  $gr_graphiteweb_conf_dir                = undef,
+  $gr_graphiteweb_webapp_dir              = undef,
+  $gr_graphiteweb_storage_dir             = '/var/lib/graphite-web',
+  $gr_graphiteweb_install_lib_dir         = undef,
+  $gr_apache_logdir                       = $::graphite::params::apache_logdir_graphite,
   $gunicorn_arg_timeout                   = 30,
   $gunicorn_bind                          = 'unix:/var/run/graphite.sock',
   $gunicorn_workers                       = 2,
@@ -737,6 +748,19 @@ class graphite (
   # validate integers
   validate_integer($gr_web_server_port)
   validate_integer($gr_web_server_port_https)
+
+  $base_dir_REAL                    = $gr_base_dir
+  $storage_dir_REAL                 = pick($gr_storage_dir,            "${base_dir_REAL}/storage")
+  $local_data_dir_REAL              = pick($gr_local_data_dir,         "${storage_dir_REAL}/whisper")
+  $rrd_dir_REAL                     = pick($gr_rrd_dir,                "${storage_dir_REAL}/rrd")
+  $whitelists_dir_REAL              = pick($gr_whitelists_dir,         "${storage_dir_REAL}/lists")
+  $carbon_conf_dir_REAL             = pick($gr_carbon_conf_dir,        "${base_dir_REAL}/conf")
+  $carbon_log_dir_REAL              = pick($gr_carbon_log_dir,         "${storage_dir_REAL}/log/carbon-cache")
+  $graphiteweb_log_dir_REAL         = pick($gr_graphiteweb_log_dir,    "${storage_dir_REAL}/log")
+  $graphiteweb_conf_dir_REAL        = pick($gr_graphiteweb_conf_dir,   "${base_dir_REAL}/conf")
+  $graphiteweb_webapp_dir_REAL      = pick($gr_graphiteweb_webapp_dir, "${base_dir_REAL}/webapp")
+  $graphiteweb_storage_dir_REAL     = $gr_graphiteweb_storage_dir
+  $graphiteweb_install_lib_dir_REAL = pick($gr_graphiteweb_install_lib_dir, "${graphiteweb_webapp_dir_REAL}/graphite")
 
   # The anchor resources allow the end user to establish relationships
   # to the "main" class and preserve the relationship to the

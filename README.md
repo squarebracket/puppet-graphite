@@ -82,7 +82,7 @@ The defaults are determined by your operating system e.g. Debian systems have on
 
 ###Configure Graphite with Grafana
 
-This setup will use the [puppetlabs-apache](https://forge.puppetlabs.com/puppetlabs/apache) and [dwerder-grafana](https://forge.puppetlabs.com/dwerder/grafana) modules to setup a graphite system with grafana frontend. You will also need an elasticsearch as it is required for grafana.
+This setup will use the [puppetlabs-apache](https://forge.puppetlabs.com/puppetlabs/apache) and [bfraser-grafana](https://forge.puppet.com/bfraser/grafana) modules to setup a graphite system with grafana frontend. You will also need an elasticsearch as it is required for grafana.
 
 ```puppet
 include '::apache'
@@ -98,14 +98,14 @@ apache::vhost { graphite.my.domain:
     display-name       => '%{GROUP}',
     inactivity-timeout => '120',
   },
-  wsgi_import_script          => '/opt/graphite/conf/graphite.wsgi',
+  wsgi_import_script          => '/opt/graphite/conf/graphite_wsgi.py',
   wsgi_import_script_options  => {
     process-group     => 'graphite',
     application-group => '%{GLOBAL}'
   },
   wsgi_process_group          => 'graphite',
   wsgi_script_aliases         => {
-    '/' => '/opt/graphite/conf/graphite.wsgi'
+    '/' => '/opt/graphite/conf/graphite_wsgi.py'
   },
   headers => [
     'set Access-Control-Allow-Origin "*"',
@@ -123,26 +123,8 @@ class { 'graphite':
   gr_disable_webapp_cache => true,
 }
 
-apache::vhost { 'grafana.my.domain':
-  servername      => 'grafana.my.domain',
-  port            => 80,
-  docroot         => '/opt/grafana',
-  error_log_file  => 'grafana_error.log',
-  access_log_file => 'grafana_access.log',
-  directories     => [
-    {
-      path            => '/opt/grafana',
-      options         => [ 'None' ],
-      allow           => 'from All',
-      allow_override  => [ 'None' ],
-      order           => 'Allow,Deny',
-    }
-  ]
-}->
 class {'grafana':
-  graphite_host      => 'graphite.my.domain',
-  elasticsearch_host => 'elasticsearach.my.domain',
-  elasticsearch_port => 9200,
+ # see manual of this module
 }
 ```
 
@@ -373,7 +355,7 @@ Default is '/opt/graphite'. Set base install location of Graphite. This forms th
 
 #####`gr_storage_dir`
 
-Default is '${gr_base_dir}/storage'. Set location of base storage files.  When not installing using pip a typical location for this may be '/opt/carbon'.
+Default is '${gr_base_dir}/storage'. Set location of base storage files.  When not installing using pip a typical location for this may be '/opt/carbon'. This dir is also used as pid dir on RedHat.
 
 #####`gr_local_data_dir`
 
@@ -568,6 +550,18 @@ Default is false. Enable carbon relay.
 Default is '0.0.0.0' (string)
 
 #####`gr_relay_line_port`
+
+Default is 2013 (integer)
+
+#####`gr_relay_enable_udp_listener`
+
+Default is 'False'. Enables the UDP listener for carbon-relay.
+
+#####`gr_relay_udp_receiver_interface`
+
+Default is '0.0.0.0' (string)
+
+#####`gr_relay_udp_receiver_port`
 
 Default is 2013 (integer)
 

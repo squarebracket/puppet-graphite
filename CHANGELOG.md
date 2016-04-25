@@ -1,3 +1,38 @@
+## 2016-04-17 - 6.0.3 (Bugfix release)
+
+#### Bugfixes:
+
+- (1deb7f9)	point Apache to the right WSGI file
+- (e01e6bc) ensure that graphiteweb_storage_dir is created
+- (5e7ce00) properly parameterize gunicorn --chdir option on redhat
+- (6f7fb67) notify web service for local_settings.py and graphite_wsgi.py
+- (1f49faf) add unit tests
+- (7042ddf) Update fail message when gr_web_server = none
+
+#### Features:
+
+- (1aa40af) patch graphite module to support UDP listener in [relay] section
+
+## 2016-04-11 - 6.0.2 (Bugfix release)
+
+#### Bugfixes:
+
+- (debfe5d) remove parameter `gr_pid_dir` and use `gr_storage_dir` instead.
+- RedHat init scripts use correct `gr_base_dir` for graphite.
+
+## 2016-04-01 - 6.0.1 (Bugfix release)
+
+#### Features:
+
+- Add alot more unit tests
+- Add code coverage analysis
+
+#### Bugfixes:
+
+- Fix/remove parameter interpolation for `gr_base_dir`. It set correct now.
+- Fix some hardcoded paths in templates, like logrotate or init scripts
+- Fix location of local_settings.py in some cases
+
 ## 2016-03-30 - 6.0.0 (Major release)
 
 #### Features:

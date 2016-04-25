@@ -61,6 +61,16 @@ class graphite::config_apache inherits graphite::params {
     }
   }
 
+  # Create the log dir if it doesn't exist
+  file { $::graphite::gr_apache_logdir:
+    ensure  => directory,
+    group   => $::graphite::config::gr_web_group_REAL,
+    mode    => '0644',
+    owner   => $::graphite::config::gr_web_user_REAL,
+    require => Package[$::graphite::params::apache_pkg],
+    before  => Service[$::graphite::params::apache_service_name]
+  }
+
   # fix graphite's race condition on start
   # if the exec fails, assume we're using a version of graphite that doesn't need it
   file { '/tmp/fix-graphite-race-condition.py':
@@ -70,7 +80,7 @@ class graphite::config_apache inherits graphite::params {
   }
   exec { 'fix graphite race condition':
     command     => 'python /tmp/fix-graphite-race-condition.py',
-    cwd         => $graphite::gr_graphiteweb_webapp_dir,
+    cwd         => $graphite::graphiteweb_webapp_dir_REAL,
     environment => 'DJANGO_SETTINGS_MODULE=graphite.settings',
     user        => $graphite::config::gr_web_user_REAL,
     logoutput   => true,
@@ -104,6 +114,7 @@ class graphite::config_apache inherits graphite::params {
         Package[$::graphite::params::apache_wsgi_pkg],
       ],
       notify  => Service[$::graphite::params::apache_service_name];
+
     "${::graphite::params::apacheconf_dir}/graphite.conf":
       ensure  => file,
       content => template($::graphite::gr_apache_conf_template),
@@ -111,7 +122,7 @@ class graphite::config_apache inherits graphite::params {
       mode    => '0644',
       owner   => $::graphite::config::gr_web_user_REAL,
       require => [
-        File[$::graphite::gr_storage_dir],
+        File[$::graphite::storage_dir_REAL],
         File["${::graphite::params::apache_dir}/ports.conf"],
       ],
       notify  => Service[$::graphite::params::apache_service_name];
